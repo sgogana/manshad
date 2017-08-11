@@ -1,0 +1,51 @@
+create or replace package validate_CUSTOMER129069 is
+
+procedure load_data(errbuf out varchar2,retcode out number);
+
+function validate_PHONE_NUMBER(v_PHONE_NUMBER number) return boolean;
+
+function validate_GENDER(v_GENDER VARCHAR2) return varchar2;
+
+end validate_CUSTOMER129069;
+
+
+  procedure load_data(errbuf out varchar2,retcode out number) is
+    cursor c is select CUSTOMER_ID,CUSTOMER_NAME,GENDER,CUSTOMER_ADDRESS,PHONE_NUMBER from XXCUSTLAB01USER129069;
+    v_CUSTOMER_ID XXCUSTLAB01USER129069.CUSTOMER_ID%type;
+    v_CUSTOMER_NAME XXCUSTLAB01USER129069.CUSTOMER_NAME%type;
+    v_GENDER XXCUSTLAB01USER129069.GENDER%type;
+    v_CUSTOMER_ADDRESS XXCUSTLAB01USER129069.CUSTOMER_ADDRESS%type;
+    v_PHONE_NUMBER XXCUSTLAB01USER129069.PHONE_NUMBER%type;
+ BEGIN
+    open c;
+    loop
+            fetch c into v_CUSTOMER_ID,v_CUSTOMER_NAME,v_GENDER,v_CUSTOMER_ADDRESS,v_PHONE_NUMBER;
+            exit when c%notfound;
+            if(validate_PHONE_NUMBER(v_PHONE_NUMBER)) then
+                    if(validate_GENDER(v_GENDER)) then
+                                          insert into XXCUSTSTLAB01USER129069(CUSTOMER_ID,CUSTOMER_NAME,GENDER,CUSTOMER_ADDRESS,PHONE_NUMBER)
+                                                    values(v_CUSTOMER_ID,v_CUSTOMER_NAME,v_GENDER,v_CUSTOMER_ADDRESS,v_PHONE_NUMBER);
+                                            end if;
+                            end if;
+    end loop;
+    close c;
+ end load_data;
+ function validate_PHONE_NUMBER(v_PHONE_NUMBER number) return boolean is
+    cnt number;
+ begin
+      if(length(V_PHONE_NUMBER)>10) then 
+         return false;
+else
+         return true;
+end if;
+ end validate_PHONE_NUMBER;
+ function validate_GENDER(v_GENDER varchar2) return VARCHAR2 IS
+ begin
+    if(v_GENDER = 'M')then
+            return 'MALE';
+    elsif(V_GENDER= 'F') then
+            return 'FEMAL';
+    end if;
+ end validate_GENDER;
+ end validate_CUSTOMER129069;
+/
