@@ -1,0 +1,13 @@
+create or replace package validate_books is
+
+procedure load_data(errbuf out varchar2,retcode out number);
+
+function validate_id(v_author_id number) return boolean;
+
+function validate_ISBN(v_ISBN number) return boolean;
+
+function validate_publishing(v_publishing date) return date;
+
+function validate_type(v_type varchar2) return boolean;
+
+end validate_books;

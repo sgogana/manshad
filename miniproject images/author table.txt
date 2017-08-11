@@ -1,0 +1,7 @@
+create table author(
+author_id number,
+author_name varchar2(25),
+birth_date date,
+gender varchar2(2),
+mother_tongue varchar2(15)
+);

@@ -1,0 +1,9 @@
+create table books_table(
+book_id number,
+book_name varchar2(50),
+author_id number,
+pages number,
+cost number,
+publishing_date date,
+book_type varchar2(20)
+);

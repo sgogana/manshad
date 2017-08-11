@@ -1,0 +1,69 @@
+
+ create or replace package body validate_books is
+ procedure load_data(errbuf out varchar2,retcode out number) is
+    cursor c is select book_name,author_id,ISBN_number,pages,cost,publishing_date,
+                       book_type from book_dummy;
+    v_book_name book_dummy.book_name%type;
+    v_author_id book_dummy.author_id%type;
+    v_ISBN book_dummy.ISBN_number%type;
+    v_pages book_dummy.pages%type;
+    v_cost book_dummy.cost%type;
+    v_publishing book_dummy.publishing_date%type;
+    v_type book_dummy.book_type%type;
+ BEGIN
+    open c;
+    loop
+            fetch c into v_book_name,v_author_id,v_ISBN,v_pages,v_cost,v_publishing,v_type;
+            exit when c%notfound;
+            if(validate_id(v_author_id)) then
+                    if(validate_ISBN(v_ISBN)) then
+                            if(v_pages > 0 and v_cost > 0) then
+                                    v_publishing := validate_publishing(v_publishing);
+                                            if(validate_type(v_type)) then
+                                                    insert into bookS_TABLE(book_id,book_name,author_id,ISBN_number,pages,cost,
+										 publishing_date,book_type) 
+                                                    values(id.nextval,v_book_name,v_author_id,v_ISBN,v_pages,v_cost,v_publishing,v_type);
+                                            end if;
+                            end if;
+                    end if;
+            end if;
+    end loop;
+    close c;
+ end load_data;
+ function validate_id(v_author_id number) return boolean is
+    cnt number;
+ begin
+    select count(author_id) into cnt from author where author_id = v_author_id;
+    if(cnt >= 1) then
+            return true;
+    else
+            return false;
+    end if;
+ end validate_id;
+ function validate_ISBN(v_ISBN number) return boolean is
+    cnt number;
+ begin
+    select count(*) into cnt from books_TABLE where ISBN_number = v_ISBN;
+    if(cnt = 0) then
+            return true;
+    else
+            return false;
+    end if;
+ end validate_ISBN;
+ function validate_publishing(v_publishing date) return date is
+ begin
+    if(v_publishing > sysdate) then
+            return sysdate;
+    else
+            return v_publishing;
+    end if;
+ end validate_publishing;
+ function validate_type(v_type varchar2) return boolean is
+ begin
+    if(v_type = 'Fiction' or v_type = 'Non-Fiction' or v_type = 'Business' or v_type = 'Audio') then
+            return true;
+    else
+            return false;
+    end if;
+ end validate_type;
+ end validate_books;

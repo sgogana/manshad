@@ -1,0 +1,3 @@
+100      RAM                 M    Mumbai       9962526605
+200      SAM                 F    Hyderabad    9962526604
+300      PAVAN               M    Chennai      9962526604
