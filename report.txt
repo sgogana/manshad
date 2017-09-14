@@ -1,0 +1,40 @@
+
+
+Report Builder:-
+
+1.Open report builder then select create report manually.
+2.Open data model, select SQL option and the write the SQL query as:
+
+	select invoice_num,invoice_date,v_name,v_site,invoice_currency,invoice_amount,
+	invoice_line_no,item_no,item_desc,tax_code,tax_amount from XX21_AP_TABLE 
+	where status = 'open' and status = 'paid_fully' and v_name = :OU_NAME;
+
+3.Connect to the database and load the appropriate table.
+4.A bind parameter(OU_NAME) is created.
+5.Create a paper layout as required.
+6.Save the report as XX21_AP_REPORT.rdf
+
+WinSCP:-
+
+The rdf file is moved from local machine to the server.
+
+Oracle Application Server:-
+
+1.Select Application Developer responsibility and then Concurrent.
+2.In executable
+	Executable Name		: XX21_AP_EXE
+	Executable Short Name	: XX21_AP_EXE
+	Application		:
+	Execution Method	: Oracle Reports
+	Executable File Name	: XX21_AP_REPORT
+3.Switch to System Administrator responsibility and then create a value set as OU_NAME 
+4.Switch to Application Developer and select Program
+	Program Name		: XX21_AP_PROG
+	Program Short Name	: XX21_AP
+	Application		:
+	Executable Name		: XX21_AP_EXE
+	Application		:
+5.Click on the parameters and then attach the value set(OU_NAME) created.
+6.Switch to System Administrator and select Request Group.
+7.Register the report in appropriate application group.
+8.Switch to appropriate responsibility and run the report.
